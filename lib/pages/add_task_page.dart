@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:planner/models/task.dart';
 import 'package:planner/widgets/date_time_picker.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -27,7 +29,26 @@ class _AddTaskPageState extends State<AddTaskPage> {
             icon: const Icon(Icons.arrow_back_ios)),
         centerTitle: true,
         title: const Text('Add Task'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.check))],
+        actions: [
+          IconButton(
+              onPressed: () {
+                int scheduleId = DateTime.now().month +
+                    DateTime.now().day +
+                    DateTime.now().millisecond;
+
+                if (contentController.text.isEmpty) {
+                  print('Can not save empty task');
+                  return;
+                }
+                if (stickerController.text.isEmpty) {
+                  stickerController.text = '🌹';
+                }
+                addTask(scheduleId, contentController.text, dateTime,
+                    stickerController.text, false, reminder, reminderDateTime);
+                print('Task added successfully');
+              },
+              icon: const Icon(Icons.check))
+        ],
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -115,5 +136,25 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ],
       )),
     );
+  }
+
+  void addTask(
+      int scheduleId,
+      String content,
+      DateTime dateTime,
+      String sticker,
+      bool completed,
+      bool reminder,
+      DateTime reminderDateTime) {
+    final userTask = Task()
+      ..scheduleId = scheduleId
+      ..content = content
+      ..sticker = sticker
+      ..dateTime = dateTime
+      ..completed = completed
+      ..reminder = reminder
+      ..reminderDateTime = reminderDateTime;
+    final box = Hive.box<Task>('usertasks');
+    box.add(userTask);
   }
 }
