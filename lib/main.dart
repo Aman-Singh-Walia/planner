@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:planner/pages/home_page.dart';
 
 void main() {
@@ -10,8 +11,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return MaterialApp(
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              elevation: 0.0,
+              systemOverlayStyle:
+                  SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+              color: Colors.blue)),
+      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
     );
   }
 }
