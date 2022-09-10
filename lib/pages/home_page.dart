@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:planner/pages/add_task_page.dart';
 import 'package:planner/pages/settings_page.dart';
 import 'package:planner/widgets/all_tasks.dart';
@@ -14,6 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int tabIndex = 0;
   List<Widget> tabs = const [AllTasks(), CompletedTasks()];
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
