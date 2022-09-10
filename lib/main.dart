@@ -20,6 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(15.0))),
               elevation: 0.0,
               systemOverlayStyle:
                   SystemUiOverlayStyle(statusBarColor: Colors.transparent),
