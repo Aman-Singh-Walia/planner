@@ -45,7 +45,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 }
                 addTask(scheduleId, contentController.text, dateTime,
                     stickerController.text, false, reminder, reminderDateTime);
-                print('Task added successfully');
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.check))
         ],
