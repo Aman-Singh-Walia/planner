@@ -9,6 +9,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TaskAdapter());
   await Hive.openBox<Task>('usertasks');
+  await Hive.openBox<String>('appTheme');
   runApp(const MyApp());
 }
 
@@ -17,18 +18,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-              shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(15.0))),
-              elevation: 0.0,
-              systemOverlayStyle:
-                  SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-              color: Colors.blue)),
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(),
-    );
+    return ValueListenableBuilder(
+        valueListenable: Hive.box<String>('appTheme').listenable(),
+        builder: (context, value, child) {
+          final b = Hive.box<String>('appTheme');
+          final themeChoice = b.get('themeChoice');
+          return MaterialApp(
+            themeMode: themeChoice == 'dark'
+                ? ThemeMode.dark
+                : themeChoice == 'light'
+                    ? ThemeMode.light
+                    : ThemeMode.system,
+            theme: ThemeData(
+                appBarTheme: const AppBarTheme(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(15.0))),
+                    elevation: 0.0,
+                    systemOverlayStyle: SystemUiOverlayStyle(
+                        statusBarColor: Colors.transparent),
+                    color: Colors.blue)),
+            darkTheme: ThemeData(colorScheme: const ColorScheme.dark()),
+            debugShowCheckedModeBanner: false,
+            home: const HomePage(),
+          );
+        });
   }
 }
