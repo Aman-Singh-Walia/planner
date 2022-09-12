@@ -31,13 +31,19 @@ class _DateTimePickerState extends State<DateTimePicker> {
   @override
   Widget build(BuildContext context) {
     dateTime = widget.defaultDate;
-    return ListTile(
-      contentPadding: widget.padding,
-      onTap: pickDateTime,
-      tileColor: widget.color,
-      title: Text(widget.title),
-      subtitle: Text(DateFormat('dd-MM-yyyy  HH:mm').format(dateTime)),
-      trailing: widget.icon,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+      child: ListTile(
+        shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.black12),
+            borderRadius: BorderRadius.circular(15.0)),
+        contentPadding: widget.padding,
+        onTap: pickDateTime,
+        tileColor: widget.color,
+        title: Text(widget.title),
+        subtitle: Text(DateFormat('dd-MM-yyyy  HH:mm').format(dateTime)),
+        trailing: widget.icon,
+      ),
     );
   }
 

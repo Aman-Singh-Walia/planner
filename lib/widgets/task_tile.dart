@@ -10,65 +10,81 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onLongPress: () async {
-        if (task.reminder) {
-          await NotificationApi.removeSchedules(task.scheduleId);
-          task.delete();
-        } else {
-          task.delete();
-        }
-      },
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ViewEditTaskPage(task: task)));
-      },
-      leading: Text(
-        task.sticker,
-        style: const TextStyle(fontSize: 30.0),
-      ),
-      title: Text(
-        task.content,
-        maxLines: 1,
-      ),
-      subtitle: Row(
-        children: [
-          task.reminder
-              ? const Icon(
-                  Icons.notifications_active,
-                  size: 15.0,
-                  color: Colors.blue,
-                )
-              : const Icon(
-                  Icons.notifications_off,
-                  size: 15.0,
-                ),
-          Text(
-            DateFormat(' dd-MM-yyyy  HH:mm').format(task.reminderDateTime),
-            style: TextStyle(
-                fontSize: 10.0, color: task.reminder ? Colors.blue : null),
-          )
-        ],
-      ),
-      trailing: IconButton(
-        icon: task.completed
-            ? const Icon(
-                Icons.check_circle_outline,
-                color: Colors.green,
-              )
-            : const Icon(Icons.circle_outlined),
-        onPressed: () async {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+      child: ListTile(
+        shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.black12),
+            borderRadius: BorderRadius.circular(15.0)),
+        onLongPress: () async {
           if (task.reminder) {
             await NotificationApi.removeSchedules(task.scheduleId);
-            task.completed = !task.completed;
-            task.save();
+            task.delete();
           } else {
-            task.completed = !task.completed;
-            task.save();
+            task.delete();
           }
         },
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ViewEditTaskPage(task: task)));
+        },
+        leading: Text(
+          task.sticker,
+          style: const TextStyle(fontSize: 30.0),
+        ),
+        title: Text(
+          task.content,
+          maxLines: 1,
+        ),
+        subtitle: Row(
+          children: [
+            Icon(
+              task.reminder
+                  ? Icons.notifications_active
+                  : Icons.notifications_off,
+              size: 15.0,
+              color:
+                  task.reminder && task.reminderDateTime.isAfter(DateTime.now())
+                      ? Colors.blue
+                      : task.reminder &&
+                              task.reminderDateTime.isBefore(DateTime.now())
+                          ? Colors.red
+                          : null,
+            ),
+            Text(
+              DateFormat(' dd-MM-yyyy  HH:mm').format(task.reminderDateTime),
+              style: TextStyle(
+                  fontSize: 10.0,
+                  color: task.reminder &&
+                          task.reminderDateTime.isAfter(DateTime.now())
+                      ? Colors.blue
+                      : task.reminder &&
+                              task.reminderDateTime.isBefore(DateTime.now())
+                          ? Colors.red
+                          : null),
+            )
+          ],
+        ),
+        trailing: IconButton(
+          icon: task.completed
+              ? const Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.green,
+                )
+              : const Icon(Icons.circle_outlined),
+          onPressed: () async {
+            if (task.reminder) {
+              await NotificationApi.removeSchedules(task.scheduleId);
+              task.completed = !task.completed;
+              task.save();
+            } else {
+              task.completed = !task.completed;
+              task.save();
+            }
+          },
+        ),
       ),
     );
   }

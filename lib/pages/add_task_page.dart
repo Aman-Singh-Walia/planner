@@ -142,14 +142,20 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   dateTime = v;
                 });
               }),
-          SwitchListTile.adaptive(
-              title: const Text('Reminder'),
-              value: reminder,
-              onChanged: (v) {
-                setState(() {
-                  reminder = v;
-                });
-              }),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+            child: SwitchListTile.adaptive(
+                shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.black12),
+                    borderRadius: BorderRadius.circular(15.0)),
+                title: const Text('Reminder'),
+                value: reminder,
+                onChanged: (v) {
+                  setState(() {
+                    reminder = v;
+                  });
+                }),
+          ),
           DateTimePicker(
               title: 'Remind On',
               firstDate: DateTime.now(),
