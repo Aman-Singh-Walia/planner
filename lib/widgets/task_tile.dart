@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/pages/view_edit_task_page.dart';
+import 'package:planner/services/notification_api.dart';
 
 class TaskTile extends StatelessWidget {
   final Task task;
@@ -10,8 +11,13 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onLongPress: () {
-        task.delete();
+      onLongPress: () async {
+        if (task.reminder) {
+          await NotificationApi.removeSchedules(task.scheduleId);
+          task.delete();
+        } else {
+          task.delete();
+        }
       },
       onTap: () {
         Navigator.push(
@@ -53,9 +59,15 @@ class TaskTile extends StatelessWidget {
                 color: Colors.green,
               )
             : const Icon(Icons.circle_outlined),
-        onPressed: () {
-          task.completed = !task.completed;
-          task.save();
+        onPressed: () async {
+          if (task.reminder) {
+            await NotificationApi.removeSchedules(task.scheduleId);
+            task.completed = !task.completed;
+            task.save();
+          } else {
+            task.completed = !task.completed;
+            task.save();
+          }
         },
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:planner/pages/add_task_page.dart';
 import 'package:planner/pages/settings_page.dart';
+import 'package:planner/services/notification_api.dart';
 import 'package:planner/widgets/all_tasks.dart';
 import 'package:planner/widgets/completed_tasks.dart';
 
@@ -19,6 +20,12 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     Hive.close();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationApi.init();
   }
 
   @override
