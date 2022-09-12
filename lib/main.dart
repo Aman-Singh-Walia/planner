@@ -38,7 +38,20 @@ class MyApp extends StatelessWidget {
                     systemOverlayStyle: SystemUiOverlayStyle(
                         statusBarColor: Colors.transparent),
                     color: Colors.blue)),
-            darkTheme: ThemeData(colorScheme: const ColorScheme.dark()),
+            darkTheme: ThemeData(
+              appBarTheme: const AppBarTheme(
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(bottom: Radius.circular(15.0))),
+                elevation: 0.0,
+                systemOverlayStyle:
+                    SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+              ),
+              colorScheme: const ColorScheme.dark(
+                primary: Colors.white,
+                secondary: Colors.white,
+              ),
+            ),
             debugShowCheckedModeBanner: false,
             home: const HomePage(),
           );
