@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/services/notification_api.dart';
+import 'package:planner/widgets/alert_dialog.dart';
 import 'package:planner/widgets/date_time_picker.dart';
 
 class ViewEditTaskPage extends StatefulWidget {
@@ -36,9 +37,10 @@ class _ViewEditTaskPageState extends State<ViewEditTaskPage> {
         title: const Text('Task'),
         actions: [
           IconButton(
-              onPressed: () async {
+              onPressed: () {
                 if (widget.task.content.isEmpty) {
-                  print('Can not save empty task');
+                  showAlertDialog(
+                      context, 'Alert', 'Could not save empty task');
                   return;
                 }
                 if (widget.task.sticker.isEmpty) {
@@ -48,16 +50,16 @@ class _ViewEditTaskPageState extends State<ViewEditTaskPage> {
                   if (widget.task.reminderDateTime
                           .isAfter(widget.task.dateTime) ||
                       widget.task.reminderDateTime.isBefore(DateTime.now())) {
-                    print(
+                    showAlertDialog(context, 'Alert',
                         'Can not set reminder for the selected date and time');
                     return;
                   }
-                  await NotificationApi.showScheduledNotification(
+                  NotificationApi.showScheduledNotification(
                       id: widget.task.scheduleId,
                       scheduleDateTime: widget.task.reminderDateTime,
                       title: widget.task.sticker,
                       body: widget.task.content);
-                  print('Task updated successfully with reminder');
+                  Navigator.pop(context);
                   return;
                 }
                 widget.task.save();

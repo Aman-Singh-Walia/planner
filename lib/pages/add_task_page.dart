@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:planner/models/task.dart';
 import 'package:planner/services/notification_api.dart';
+import 'package:planner/widgets/alert_dialog.dart';
 import 'package:planner/widgets/date_time_picker.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -32,13 +33,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
         title: const Text('Add Task'),
         actions: [
           IconButton(
-              onPressed: () async {
+              onPressed: () {
                 int scheduleId = DateTime.now().month +
                     DateTime.now().day +
                     DateTime.now().millisecond;
 
                 if (contentController.text.isEmpty) {
-                  print('Can not save empty task');
+                  showAlertDialog(
+                      context, 'Alert', 'Could not save empty task');
                   return;
                 }
                 if (stickerController.text.isEmpty) {
@@ -47,11 +49,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 if (reminder) {
                   if (reminderDateTime.isAfter(dateTime) ||
                       reminderDateTime.isBefore(DateTime.now())) {
-                    print(
+                    showAlertDialog(context, 'Alert',
                         'Can not set reminder for the selected date and time');
+
                     return;
                   }
-                  await NotificationApi.showScheduledNotification(
+                  NotificationApi.showScheduledNotification(
                       id: scheduleId,
                       scheduleDateTime: reminderDateTime,
                       title: stickerController.text,
@@ -64,12 +67,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       false,
                       reminder,
                       reminderDateTime);
-                  print('Task added successfully with reminder');
+
+                  Navigator.pop(context);
                   return;
                 }
                 addTask(scheduleId, contentController.text, dateTime,
                     stickerController.text, false, reminder, reminderDateTime);
-                print('Task added successfully');
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.check))
         ],
